@@ -1,25 +1,28 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, BarChart2, Calendar, Image, FileText, Settings, HelpCircle } from 'lucide-react';
 
 interface NavItemProps {
   icon: React.ReactNode;
   label: string;
-  active?: boolean;
+  to: string;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon, label, active = false }) => (
+const NavItem: React.FC<NavItemProps> = ({ icon, label, to }) => (
   <li>
-    <a 
-      href="#" 
-      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-        active 
+    <NavLink 
+      to={to}
+      className={({ isActive }) => `
+        flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors
+        ${isActive 
           ? 'bg-linkedin-light text-linkedin-primary font-medium' 
           : 'text-slate-600 hover:bg-gray-100'
-      }`}
+        }
+      `}
     >
       {icon}
       <span>{label}</span>
-    </a>
+    </NavLink>
   </li>
 );
 
@@ -32,23 +35,27 @@ const Sidebar: React.FC = () => {
             <NavItem 
               icon={<LayoutDashboard size={20} />} 
               label="Dashboard" 
-              active 
+              to="/"
             />
             <NavItem 
               icon={<BarChart2 size={20} />} 
               label="Analytics" 
+              to="/analytics"
             />
             <NavItem 
               icon={<Calendar size={20} />} 
               label="Content Calendar" 
+              to="/calendar"
             />
             <NavItem 
               icon={<Image size={20} />} 
               label="Media Library" 
+              to="/media"
             />
             <NavItem 
               icon={<FileText size={20} />} 
               label="Reports" 
+              to="/reports"
             />
           </ul>
 
@@ -57,10 +64,12 @@ const Sidebar: React.FC = () => {
               <NavItem 
                 icon={<Settings size={20} />} 
                 label="Settings" 
+                to="/settings"
               />
               <NavItem 
                 icon={<HelpCircle size={20} />} 
                 label="Help & Support" 
+                to="/help"
               />
             </ul>
           </div>
@@ -80,5 +89,3 @@ const Sidebar: React.FC = () => {
     </aside>
   );
 };
-
-export default Sidebar;
