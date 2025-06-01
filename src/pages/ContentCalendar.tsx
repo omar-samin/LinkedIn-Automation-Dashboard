@@ -44,3 +44,5 @@ const ContentCalendar: React.FC = () => {
     </div>
   );
 };
+
+export default ContentCalendar

@@ -32,3 +32,5 @@ const MediaLibrary: React.FC = () => {
     </div>
   );
 };
+
+export default MediaLibrary

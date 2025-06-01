@@ -25,7 +25,7 @@ function App() {
               <Route path="/media" element={<MediaLibrary />} />
               <Route path="/reports" element={<Reports />} />
               <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/\" replace />} />
             </Routes>
           </main>
         </div>
@@ -33,3 +33,5 @@ function App() {
     </Router>
   );
 }
+
+export default App
