@@ -1,9 +1,24 @@
 import React from 'react';
 import { Download, Mail } from 'lucide-react';
 import { mockDashboardData } from '../data/mockData';
+import { exportToCSV, generateReportEmail } from '../utils/exportUtils';
 
 const Reports: React.FC = () => {
   const { weeklyReports } = mockDashboardData;
+
+  const handleExportReport = () => {
+    const exportData = weeklyReports.map(report => ({
+      week: report.week,
+      totalPosts: report.totalPosts,
+      totalImpressions: report.totalImpressions,
+      engagementRate: report.engagementRate
+    }));
+    exportToCSV(exportData, 'weekly-report');
+  };
+
+  const handleEmailReport = () => {
+    generateReportEmail(weeklyReports);
+  };
 
   return (
     <div className="p-6 animate-fade-in">
@@ -13,11 +28,17 @@ const Reports: React.FC = () => {
           <p className="text-slate-600">View and export your LinkedIn performance reports</p>
         </div>
         <div className="flex space-x-2">
-          <button className="btn btn-secondary flex items-center">
+          <button 
+            className="btn btn-secondary flex items-center"
+            onClick={handleEmailReport}
+          >
             <Mail size={20} className="mr-2" />
             Email Report
           </button>
-          <button className="btn btn-primary flex items-center">
+          <button 
+            className="btn btn-primary flex items-center"
+            onClick={handleExportReport}
+          >
             <Download size={20} className="mr-2" />
             Export Report
           </button>
@@ -55,4 +76,4 @@ const Reports: React.FC = () => {
   );
 };
 
-export default Reports
+export default Reports;

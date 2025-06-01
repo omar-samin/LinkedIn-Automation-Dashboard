@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Calendar as CalendarIcon, Plus } from 'lucide-react';
 import { mockDashboardData } from '../data/mockData';
+import CreatePostModal from '../components/CreatePostModal';
 
 const ContentCalendar: React.FC = () => {
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const { upcomingPosts } = mockDashboardData;
+
+  const handleCreatePost = (postData: any) => {
+    // Here you would typically send this to your backend
+    console.log('New post data:', postData);
+    // For demo purposes, we'll just show an alert
+    alert('Post scheduled successfully!');
+  };
 
   return (
     <div className="p-6 animate-fade-in">
@@ -12,7 +21,10 @@ const ContentCalendar: React.FC = () => {
           <h1 className="text-2xl font-bold mb-2">Content Calendar</h1>
           <p className="text-slate-600">Schedule and manage your LinkedIn posts</p>
         </div>
-        <button className="btn btn-primary flex items-center">
+        <button 
+          className="btn btn-primary flex items-center"
+          onClick={() => setIsCreatePostModalOpen(true)}
+        >
           <Plus size={20} className="mr-2" />
           New Post
         </button>
@@ -41,8 +53,14 @@ const ContentCalendar: React.FC = () => {
           ))}
         </div>
       </div>
+
+      <CreatePostModal
+        isOpen={isCreatePostModalOpen}
+        onClose={() => setIsCreatePostModalOpen(false)}
+        onSubmit={handleCreatePost}
+      />
     </div>
   );
 };
 
-export default ContentCalendar
+export default ContentCalendar;

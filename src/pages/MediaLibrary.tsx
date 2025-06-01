@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, Upload } from 'lucide-react';
 
 const MediaLibrary: React.FC = () => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      // Here you would typically upload the file to your backend
+      // For demo purposes, we'll just show an alert
+      alert(`File "${file.name}" uploaded successfully!`);
+    }
+  };
+
   return (
     <div className="p-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
@@ -9,10 +21,22 @@ const MediaLibrary: React.FC = () => {
           <h1 className="text-2xl font-bold mb-2">Media Library</h1>
           <p className="text-slate-600">Manage your images and videos for LinkedIn posts</p>
         </div>
-        <button className="btn btn-primary flex items-center">
-          <Upload size={20} className="mr-2" />
-          Upload Media
-        </button>
+        <div>
+          <input
+            type="file"
+            id="media-upload"
+            className="hidden"
+            accept="image/*,video/*"
+            onChange={handleFileUpload}
+          />
+          <label
+            htmlFor="media-upload"
+            className="btn btn-primary flex items-center cursor-pointer"
+          >
+            <Upload size={20} className="mr-2" />
+            Upload Media
+          </label>
+        </div>
       </div>
 
       <div className="card">
@@ -33,4 +57,4 @@ const MediaLibrary: React.FC = () => {
   );
 };
 
-export default MediaLibrary
+export default MediaLibrary;

@@ -1,18 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BarChart3, Users, Zap, Activity } from 'lucide-react';
 import MetricCard from './MetricCard';
 import { DashboardData } from '../types';
+import CreatePostModal from './CreatePostModal';
+import { exportToCSV } from '../utils/exportUtils';
 
 interface DashboardHeaderProps {
   data: DashboardData;
 }
 
 const DashboardHeader: React.FC<DashboardHeaderProps> = ({ data }) => {
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const { totals } = data;
   
-  // Format numbers with commas
   const formatNumber = (num: number): string => {
     return num.toLocaleString();
+  };
+
+  const handleExportData = () => {
+    const exportData = data.posts.map(post => ({
+      date: post.publishedAt,
+      content: post.content,
+      impressions: post.metrics.impressions,
+      likes: post.metrics.likes,
+      comments: post.metrics.comments,
+      shares: post.metrics.shares
+    }));
+    exportToCSV(exportData, 'linkedin-analytics');
+  };
+
+  const handleCreatePost = (postData: any) => {
+    // Here you would typically send this to your backend
+    console.log('New post data:', postData);
+    // For demo purposes, we'll just show an alert
+    alert('Post scheduled successfully!');
   };
 
   return (
@@ -24,10 +45,16 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ data }) => {
         </div>
         
         <div className="mt-4 sm:mt-0 flex space-x-3">
-          <button className="btn btn-secondary">
+          <button 
+            className="btn btn-secondary"
+            onClick={handleExportData}
+          >
             Export Data
           </button>
-          <button className="btn btn-primary">
+          <button 
+            className="btn btn-primary"
+            onClick={() => setIsCreatePostModalOpen(true)}
+          >
             Create Post
           </button>
         </div>
@@ -62,6 +89,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ data }) => {
           formatter={(val) => `${val}%`}
         />
       </div>
+
+      <CreatePostModal
+        isOpen={isCreatePostModalOpen}
+        onClose={() => setIsCreatePostModalOpen(false)}
+        onSubmit={handleCreatePost}
+      />
     </div>
   );
 };
