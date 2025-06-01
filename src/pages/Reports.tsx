@@ -20,6 +20,23 @@ const Reports: React.FC = () => {
     generateReportEmail(weeklyReports);
   };
 
+  const handleViewDetails = (week: string) => {
+    const report = weeklyReports.find(r => r.week === week);
+    if (report) {
+      alert(`
+Detailed Report for ${report.week}
+
+Performance Metrics:
+- Total Posts: ${report.totalPosts}
+- Total Impressions: ${report.totalImpressions.toLocaleString()}
+- Total Engagements: ${report.totalEngagements.toLocaleString()}
+- Engagement Rate: ${report.engagementRate}%
+
+This would typically open a detailed view with graphs and more metrics.
+      `);
+    }
+  };
+
   return (
     <div className="p-6 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
@@ -52,7 +69,12 @@ const Reports: React.FC = () => {
             <div key={index} className="p-4 border rounded-lg hover:bg-gray-50">
               <div className="flex justify-between items-center">
                 <h3 className="font-medium">{report.week}</h3>
-                <button className="btn btn-secondary text-sm">View Details</button>
+                <button 
+                  className="btn btn-secondary text-sm"
+                  onClick={() => handleViewDetails(report.week)}
+                >
+                  View Details
+                </button>
               </div>
               <div className="grid grid-cols-3 gap-4 mt-4">
                 <div>

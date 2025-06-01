@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AutomationStatus } from '../types';
 import { CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
@@ -7,7 +7,32 @@ interface AutomationStatusCardProps {
   status: AutomationStatus;
 }
 
-const AutomationStatusCard: React.FC<AutomationStatusCardProps> = ({ status }) => {
+const AutomationStatusCard: React.FC<AutomationStatusCardProps> = ({ status: initialStatus }) => {
+  const [status, setStatus] = useState(initialStatus);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleRefresh = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setStatus({
+        ...status,
+        lastRun: new Date().toISOString(),
+      });
+      setIsLoading(false);
+      alert('Status refreshed successfully!');
+    }, 1000);
+  };
+
+  const handleStatusChange = () => {
+    const newStatus = status.status === 'active' ? 'paused' : 'active';
+    setStatus({
+      ...status,
+      status: newStatus,
+    });
+    alert(`Automation ${newStatus === 'active' ? 'resumed' : 'paused'} successfully!`);
+  };
+
   const getStatusIndicator = () => {
     switch (status.status) {
       case 'active':
@@ -70,17 +95,21 @@ const AutomationStatusCard: React.FC<AutomationStatusCardProps> = ({ status }) =
       </div>
       
       <div className="mt-4 flex items-center justify-between">
-        <button className="btn btn-secondary flex items-center">
-          <RefreshCw size={16} className="mr-2" />
+        <button 
+          className={`btn btn-secondary flex items-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          onClick={handleRefresh}
+          disabled={isLoading}
+        >
+          <RefreshCw size={16} className={`mr-2 ${isLoading ? 'animate-spin' : ''}`} />
           Refresh Status
         </button>
         
         {status.status === 'paused' ? (
-          <button className="btn btn-primary">Resume</button>
+          <button className="btn btn-primary" onClick={handleStatusChange}>Resume</button>
         ) : status.status === 'error' ? (
-          <button className="btn btn-primary">Retry</button>
+          <button className="btn btn-primary" onClick={handleStatusChange}>Retry</button>
         ) : (
-          <button className="btn btn-secondary">Pause</button>
+          <button className="btn btn-secondary" onClick={handleStatusChange}>Pause</button>
         )}
       </div>
     </div>

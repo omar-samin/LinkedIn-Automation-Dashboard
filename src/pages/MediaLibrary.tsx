@@ -1,17 +1,49 @@
 import React, { useState } from 'react';
 import { Image, Upload } from 'lucide-react';
 
+interface MediaItem {
+  id: string;
+  type: 'image' | 'video';
+  url: string;
+  name: string;
+  uploadDate: string;
+}
+
 const MediaLibrary: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [mediaItems] = useState<MediaItem[]>([
+    {
+      id: '1',
+      type: 'image',
+      url: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg',
+      name: 'Team Meeting',
+      uploadDate: '2024-03-15'
+    },
+    {
+      id: '2',
+      type: 'image',
+      url: 'https://images.pexels.com/photos/3183183/pexels-photo-3183183.jpeg',
+      name: 'Product Launch',
+      uploadDate: '2024-03-14'
+    },
+    // Add more mock media items as needed
+  ]);
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      // Here you would typically upload the file to your backend
-      // For demo purposes, we'll just show an alert
       alert(`File "${file.name}" uploaded successfully!`);
     }
+  };
+
+  const handleViewDetails = (item: MediaItem) => {
+    alert(`
+Media Details:
+Name: ${item.name}
+Type: ${item.type}
+Upload Date: ${new Date(item.uploadDate).toLocaleDateString()}
+    `);
   };
 
   return (
@@ -41,13 +73,22 @@ const MediaLibrary: React.FC = () => {
 
       <div className="card">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <div key={index} className="relative group">
-              <div className="aspect-square bg-linkedin-light rounded-lg flex items-center justify-center">
-                <Image size={32} className="text-linkedin-primary" />
+          {mediaItems.map((item) => (
+            <div key={item.id} className="relative group">
+              <div className="aspect-square rounded-lg overflow-hidden">
+                <img 
+                  src={item.url} 
+                  alt={item.name}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <button className="btn btn-secondary text-sm">View Details</button>
+                <button 
+                  className="btn btn-secondary text-sm"
+                  onClick={() => handleViewDetails(item)}
+                >
+                  View Details
+                </button>
               </div>
             </div>
           ))}
